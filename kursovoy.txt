@@ -1,0 +1,63 @@
+ЭТО В index.php
+<?php
+require_once ('views/layout/header.php');
+require('controllers/Products.php');
+?>
+<div class="container mb-2 d-flex justify-content-between align-items-center p-2">
+    <div>
+        <a class="knopa" href="/index.php">Главная</a>
+    </div>
+    <div>
+        <a class="knopa" href="views/auth/auth.php" >Вход</a>
+        <a class="knopa" href="views/auth/registration.php" >Регистрация</a>
+    </div>
+</div>
+<table class="table table-hover table-info">
+    <thead>
+    <tr>
+        <th> </th>
+        <th>Название товара</th>
+        <th>Количество</th>
+        <th>Статус</th>
+        <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    $db = new Products();
+    $data = $db->get();
+    foreach ($data as $key=>$row){
+        ?>
+        <tr>
+            <td><?php echo ++$key;?></td>
+            <td><?php echo $row['name'];?></td>
+            <td><?php echo $row['value'];?></td>
+            <td><?php echo $row['status'];?></td>
+            <td><?php echo $row['date'];?></td>
+        </tr>
+    <?php }?>
+    </tbody>
+</table>
+ЭТО В header.php
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../public/css/bootstrap.css">
+</head>
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="https://www.asralertsystems.com/hs-fs/hubfs/Warehouse%20Logo%20png.png?width=165&name=Warehouse%20Logo%20png.png">
+    <title>Склад "ChiCha Corp"</title>
+</head>
+<body>
+
+</body>
