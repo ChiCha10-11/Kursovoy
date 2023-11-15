@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Дек 19 2022 г., 03:59
--- Версия сервера: 10.4.27-MariaDB
--- Версия PHP: 8.1.12
+-- Время создания: Ноя 15 2023 г., 19:51
+-- Версия сервера: 10.4.28-MariaDB
+-- Версия PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,26 +24,13 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `administrator`
+-- Структура таблицы `orders`
 --
 
-CREATE TABLE `administrator` (
+CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
-  `login` char(45) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `password` varchar(32) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `order`
---
-
-CREATE TABLE `order` (
-  `id` int(11) NOT NULL,
-  `number` int(11) DEFAULT NULL,
-  `date` datetime DEFAULT NULL
+  `number` varchar(255) NOT NULL,
+  `date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -54,9 +41,9 @@ CREATE TABLE `order` (
 
 CREATE TABLE `products` (
   `id` int(11) NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `value` int(11) DEFAULT NULL,
-  `status` varchar(45) DEFAULT NULL,
+  `status` enum('на складе','ждет отгрузки','отправлен') DEFAULT NULL,
   `date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -65,8 +52,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `value`, `status`, `date`) VALUES
-(6, 'Автомобильные диски ', 200, 'Прибыл', '2022-12-18'),
-(7, 'Автомобильные коврики', 50, 'Готов к отгрузке', '2022-12-15');
+(1, 'Куклы \"Funky Monkey\"', 500, 'ждет отгрузки', '2023-11-13'),
+(2, 'Тормозные колодки \"RanDenTos\"', 350, 'на складе', '2023-11-13');
 
 -- --------------------------------------------------------
 
@@ -76,18 +63,20 @@ INSERT INTO `products` (`id`, `name`, `value`, `status`, `date`) VALUES
 
 CREATE TABLE `staff` (
   `id` int(11) NOT NULL,
-  `last_name` char(20) DEFAULT NULL,
-  `first_name` varchar(20) DEFAULT NULL,
-  `father_name` varchar(20) DEFAULT NULL,
-  `post` varchar(20) DEFAULT NULL
+  `last_name` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `father_name` varchar(255) DEFAULT NULL,
+  `post` varchar(255) DEFAULT NULL,
+  `pass` varchar(255) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `staff`
 --
 
-INSERT INTO `staff` (`id`, `last_name`, `first_name`, `father_name`, `post`) VALUES
-(5, 'Шаинов', 'Руслан', 'Хуршедович', 'Грузчик');
+INSERT INTO `staff` (`id`, `last_name`, `first_name`, `father_name`, `post`, `pass`, `role`) VALUES
+(3, 'Шаинов', 'Руслан', 'Хуршедович', 'Грузчик', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -97,10 +86,10 @@ INSERT INTO `staff` (`id`, `last_name`, `first_name`, `father_name`, `post`) VAL
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `last_name` char(20) DEFAULT NULL,
-  `first_name` varchar(20) DEFAULT NULL,
-  `father_name` varchar(20) DEFAULT NULL,
-  `password` int(11) DEFAULT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `father_name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
   `role` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -109,26 +98,16 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `last_name`, `first_name`, `father_name`, `password`, `role`) VALUES
-(1, 'Козлов', 'Дмитрий', 'Витальевич', 0, 1),
-(2, NULL, NULL, NULL, NULL, NULL),
-(3, 'Козлов', 'Дмитри', 'Витальевич', 0, 2),
-(4, ',', '.', 'Витальевич', 0, 2),
-(5, 'Свадеба', 'Софья', 'Максимовна', 123123, 2);
+(1, 'Козлов', 'Дмитрий', 'Витальевич', 'fcfcby561', 1);
 
 --
 -- Индексы сохранённых таблиц
 --
 
 --
--- Индексы таблицы `administrator`
+-- Индексы таблицы `orders`
 --
-ALTER TABLE `administrator`
-  ADD PRIMARY KEY (`id`);
-
---
--- Индексы таблицы `order`
---
-ALTER TABLE `order`
+ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -154,34 +133,28 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT для таблицы `administrator`
+-- AUTO_INCREMENT для таблицы `orders`
 --
-ALTER TABLE `administrator`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `order`
---
-ALTER TABLE `order`
+ALTER TABLE `orders`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
